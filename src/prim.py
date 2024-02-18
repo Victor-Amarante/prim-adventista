@@ -4,7 +4,7 @@ import numpy as np
 
 # abrimos a base de dados de teste
 # -- VARIAVEL: COLOCAR A BASE DE DADOS ESCOLHIDA
-df = pd.read_csv('dados.csv')
+df = pd.read_csv('conexoes.csv')
 
 # criamos uma lista de vertices da base de dados
 V = list(set(df['origem'].tolist() + df['destino'].tolist()))
