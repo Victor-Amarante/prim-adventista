@@ -49,13 +49,18 @@ def Prim(G, E, raiz, W):
 def w(u, v, W):
     return W[(u, v)]
 
+
+st.set_page_config(page_title='Algoritmo do Prim')
 def main():
     st.title("Aplicação de Algoritmo de Prim em Grafos")
 
     # Adicionar upload de arquivo CSV
+    st.markdown("""É necessário que a base de dados tenha as seguintes variáveis em ordem:
+                origem, destino, peso""")
     file = st.file_uploader("Carregar arquivo CSV", type=["csv"])
     if file is not None:
         df = pd.read_csv(file)
+        
         V = list(set(df['origem'].tolist() + df['destino'].tolist()))
         E = [(row['origem'], row['destino']) for index, row in df.iterrows()]
         W = {(row['origem'], row['destino']): row['peso'] for index, row in df.iterrows()}
@@ -64,8 +69,15 @@ def main():
         # Aplicar algoritmo de Prim
         raiz = st.selectbox("Selecione a raiz:", sorted(V))
         if raiz:
-            predecessor, _ = Prim(G, E, raiz, W)
-
+            predecessor, chave = Prim(G, E, raiz, W)
+            
+            predecessor_sorted = dict(sorted(predecessor.items()))
+            chave_sorted = dict(sorted(chave.items()))
+            
+            st.markdown('## Lista de Predecessores:')
+            st.markdown(f"Predecessor: {predecessor_sorted}")
+            st.markdown('## Lista de Custos para chegar ao vértice:')
+            st.markdown(f"Chave: {chave_sorted}")
             # Criar grafo original
             G_original = nx.Graph()
             G_original.add_edges_from(E)
@@ -73,7 +85,6 @@ def main():
             pos = nx.spring_layout(G_original)
             nx.draw(G_original, pos, with_labels=True, node_size=700, node_color='skyblue', font_size=10, font_weight='bold', width=2, edge_color='gray')
             st.pyplot(plt)
-
             # Criar grafo mínimo
             G_minimo = nx.Graph()
             for u, v in predecessor.items():
@@ -83,6 +94,8 @@ def main():
             pos = nx.spring_layout(G_minimo)
             nx.draw(G_minimo, pos, with_labels=True, node_size=700, node_color='lightgreen', font_size=10, font_weight='bold', width=2, edge_color='green')
             st.pyplot(plt)
+            
+
 
 if __name__ == "__main__":
     main()
