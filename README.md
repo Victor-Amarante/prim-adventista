@@ -34,7 +34,7 @@
         2. Escolas isoladas, se conectam com a única escola mais próxima independente da distância.
 3. Disponibilidade: Utilizamos 2 ferramentas principais para o desenvolvimento de uma interface visual interativa:
     1. [NetworkX](https://networkx.org/) foi utilizado para a criação de grafos, demonstrando o *Grafo Original* e a *Árvore Geradora Mínima*, proveniente do algoritmo Prim.
-    1. [Streamlit](https://streamlit.io/) foi utilizado para fornecer um web-app para que o usuário possa inserir uma base de dados, escolher o vértice raíz, rodar o algoritmo e visualizar a lista de predecessores, lita de custos e os grafos.
+    1. [Streamlit](https://streamlit.io/) foi utilizado para fornecer um web-app para que o usuário possa inserir uma base de dados, escolher o vértice raíz, rodar o algoritmo e visualizar a lista de predecessores, lista de custos e os grafos.
 3. Utilidade: Utilizamos as informações coletadas e devidamente tratadas como base de dados para validar o algoritmo Prim, cuja finalidade é encontrar o caminho de menor custo possível que conecta todas as escolas com fibra óptica. 
 
 # 
