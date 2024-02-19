@@ -109,7 +109,7 @@ def main():
         # Aplicar algoritmo de Prim
         raiz = st.selectbox("Selecione a raiz:", sorted(V))
         if raiz:
-            predecessor, chave = Prim(G, E, raiz, W)
+            predecessor, chave = Prim(G, raiz, W)
             
             predecessor_sorted = dict(sorted(predecessor.items()))
             chave_sorted = dict(sorted(chave.items()))
