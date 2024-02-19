@@ -24,7 +24,9 @@
 
 1. Coleta: Os dados dos colégios foram extraídos através de Web Scrapping da sessão de unidades do Colégio Adventista [LINK](https://www.encontreumaescola.com.br/mapa).
 
-    <img src="schools.png" style="width:50%">
+    | <img src="schools.png" style="width:50%"> |
+    | :----: |
+    
 2. Tratamento de Dados: 
     1. Uitilizamos [pandas](https://pandas.pydata.org) para selecionar as 342 escolas com dados de localização Latitude/Longitude. 
     2. Utilizamos [geopy](https://geopy.readthedocs.io/en/stable/) para extrair a distância entre as escolas, utilizando 2 regras de negócio:
