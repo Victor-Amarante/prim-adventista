@@ -4,59 +4,99 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from math import inf
 
-def adjacentes(v, G):
-    (V, E, w) = G
+from typing import List, Tuple
+
+
+def procurar_adjacentes(vertice_atual:str, grafo:Tuple) -> List:
+    """Procura os vértices adjacentes ao vértice atual
+    Args:
+        vertice_atual (str): Vértice atual
+        grafo (Tuple): Grafo
+
+    Returns:
+        List: Lista de vértices adjacentes
+    """
+    (_, arestas, _) = grafo
     adj = []
-    for aresta in E: 
+    for aresta in arestas: 
         (pred, suc) = aresta 
-        if v == pred: 
+        if vertice_atual == pred: 
             adj.append(suc) 
     return adj 
 
-def retire_vertice_menor_chave(Q):
-    menor_vertice = list(Q.keys())[0]
-    menor_chave   = Q[menor_vertice]
+def retire_vertice_menor_chave(vertices_ordenados:dict) -> str:
+    """Retira o vértice de menor chave da lista de vértices ordenados
 
-    for vertice in Q:
-        chave = Q[vertice]
-        if chave < menor_chave:
-            menor_chave   = chave
+    Args:
+        vertices_ordenados (dict): Dicionário com os pesos e seus vértices
+
+    Returns:
+        str: Vértice de menor chave
+    """
+    menor_vertice = list(vertices_ordenados.keys())[0]
+    menor_peso = vertices_ordenados[menor_vertice]
+
+    for vertice in vertices_ordenados:
+        chave = vertices_ordenados[vertice]
+        if chave < menor_peso:
+            menor_peso = chave
             menor_vertice = vertice
-
-    chave_x_valor = Q.pop(menor_vertice)
+    
+    vertices_ordenados.pop(menor_vertice)
     return menor_vertice
 
-def Prim(G, E, raiz, W):
-    (V,E,w) = G
-    chave = {}
+def Prim(grafo:Tuple, raiz:str, pesos:List) -> Tuple:
+    """Aplica o algoritmo de Prim em um grafo
+
+    Args:
+        grafo (Tuple): Grafo a ser analisado
+        raiz (str): Vértice raiz
+        pesos (List): Pesos das arestas
+
+    Returns:
+        Tuple: Predecessores e chaves
+    """
+    
+    (vertices, arestas, pesos) = grafo
+    custos = {}
     predecessor = {}
-    for v in V:
-        chave[v] = inf
-        predecessor[v] = ''
+    for vertice in vertices:
+        custos[vertice] = inf
+        predecessor[vertice] = ''
 
-    chave[raiz] = 0
-    Q = {v:chave[v] for v in V}
-    while len(Q) > 0:
-        v = retire_vertice_menor_chave(Q)
-        for u in adjacentes(v, G):
-            if u in Q and w(v,u, W) < chave[u]:
-                predecessor[u] = v
-                chave[u] = w(v,u, W)
-                Q[u] = chave[u]
+    custos[raiz] = 0
+    vertices_ordenados = {vertice:custos[vertice] for vertice in vertices}
+    while vertices_ordenados:
+        vertice = retire_vertice_menor_chave(vertices_ordenados)
+        for vertice_adjacente in procurar_adjacentes(vertice, grafo):
+            if vertice_adjacente in vertices_ordenados and retornar_peso_aresta(vertice,vertice_adjacente, pesos) < custos[vertice_adjacente]:
+                predecessor[vertice_adjacente] = vertice
+                custos[vertice_adjacente] = retornar_peso_aresta(vertice,vertice_adjacente, pesos)
+                vertices_ordenados[vertice_adjacente] = custos[vertice_adjacente]
 
-    return predecessor, chave
+    return predecessor, custos
 
-def w(u, v, W):
-    return W[(u, v)]
+def retornar_peso_aresta(vertice, vertice_adjacente, pesos):
+    """Retorna o peso da aresta entre dois vértices
+
+    Args:
+        vertice (_type_): Vertice Alvo
+        vertice_adjacente (_type_): Vertice Adjacente
+        pesos (_type_): Pesos das arestas
+
+    Returns:
+        _type_: Peso da aresta do vertice ao vertice adjacente
+    """
+    return pesos[(vertice, vertice_adjacente)]
 
 
 st.set_page_config(page_title='Algoritmo do Prim')
+
 def main():
     st.title("Aplicação de Algoritmo de Prim em Grafos")
 
     # Adicionar upload de arquivo CSV
-    st.markdown("""É necessário que a base de dados tenha as seguintes variáveis em ordem:
-                origem, destino, peso""")
+    st.markdown("É necessário que a base de dados tenha as seguintes variáveis em ordem:\norigem, destino, peso")
     file = st.file_uploader("Carregar arquivo CSV", type=["csv"])
     if file is not None:
         df = pd.read_csv(file)
@@ -64,7 +104,7 @@ def main():
         V = list(set(df['origem'].tolist() + df['destino'].tolist()))
         E = [(row['origem'], row['destino']) for index, row in df.iterrows()]
         W = {(row['origem'], row['destino']): row['peso'] for index, row in df.iterrows()}
-        G = (V, E, w)
+        G = (V, E, W)
 
         # Aplicar algoritmo de Prim
         raiz = st.selectbox("Selecione a raiz:", sorted(V))

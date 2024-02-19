@@ -24,7 +24,7 @@ def encontrar_mais_proximo(colegio, colegios):
     return distancias[0]
 
 # Carregar os dados dos colégios
-colegios = carregar_dados('escolas.csv')
+colegios = carregar_dados('./data/escolas-info.csv')
 
 # Conjunto para armazenar conexões já registradas
 conexoes_registradas = set()
@@ -33,7 +33,7 @@ conexoes_registradas = set()
 conexoes = []
 for colegio in colegios:
     # Encontrar o colégio mais próximo, se estiver isolado
-    DISTANCIA_MINIMA = 100
+    DISTANCIA_MINIMA = 15
     if all(calcular_distancia(colegio['coordenadas'], outro['coordenadas']) > DISTANCIA_MINIMA for outro in colegios if outro['nome'] != colegio['nome']):
         destino, distancia = encontrar_mais_proximo(colegio, colegios)
         # Adicionar conexão apenas se não estiver registrada
